@@ -2,6 +2,7 @@ import axios from 'axios'
 import apiConfig from './api.config'
 import type { IPagedResult } from '../types/paged-result.interface'
 import type { ITouristPoint } from '../types/tourist-point.interface'
+import type { ICreateTouristPointDto, IUpdateTouristPointDto } from '../types/tourist-point-dto.interface'
 
 export interface GetTouristPointsParams {
   pageNumber?: number
@@ -48,7 +49,7 @@ class TouristPointService {
   }
 
   async createTouristPoint(
-    data: Omit<ITouristPoint, 'id'>
+    data: ICreateTouristPointDto
   ): Promise<ITouristPoint> {
     const response = await axios.post<ITouristPoint>(
       this.baseURL,
@@ -61,7 +62,7 @@ class TouristPointService {
 
   async updateTouristPoint(
     id: string,
-    data: Partial<ITouristPoint>
+    data: IUpdateTouristPointDto
   ): Promise<ITouristPoint> {
     const response = await axios.put<ITouristPoint>(
       `${this.baseURL}/${id}`,

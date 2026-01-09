@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react'
 import Swal from 'sweetalert2'
-import { getStates, getCities } from '../services/ibge.service'
+import { getStates } from '../services/state.service'
 import type { ITouristPoint } from '../types/tourist-point.interface'
-import type { IEstado, IMunicipio } from '../types/IBGE.interface'
+import type { IState } from '../types/state.interface'
+import type { ICity } from '../types/city.interface'
+import type { ICreateTouristPointDto } from '../types/tourist-point-dto.interface'
+import { getCities } from '../services/city.service'
 
 interface TouristPointModalProps {
   isOpen: boolean
   onClose: () => void
-  onSubmit: (data: Omit<ITouristPoint, 'id'>, id?: string) => Promise<void>
+  onSubmit: (data: ICreateTouristPointDto, id?: string) => Promise<void>
   editingPoint?: ITouristPoint | null
 }
 
@@ -16,15 +19,12 @@ export default function TouristPointModal({ isOpen, onClose, onSubmit, editingPo
     name: '',
     description: '',
     location: '',
-    ibgeCode: '',
-    cityName: '',
-    stateName: '',
-    stateAcronym: ''
+    cityId: 0
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [states, setStates] = useState<IEstado[]>([])
-  const [cities, setCities] = useState<IMunicipio[]>([])
+  const [states, setStates] = useState<IState[]>([])
+  const [cities, setCities] = useState<ICity[]>([])
   const [selectedStateId, setSelectedStateId] = useState<number | null>(null)
   const [isLoadingStates, setIsLoadingStates] = useState(false)
   const [isLoadingCities, setIsLoadingCities] = useState(false)
@@ -41,12 +41,10 @@ export default function TouristPointModal({ isOpen, onClose, onSubmit, editingPo
         name: editingPoint.name,
         description: editingPoint.description,
         location: editingPoint.location,
-        ibgeCode: editingPoint.ibgeCode,
-        cityName: editingPoint.cityName,
-        stateName: editingPoint.stateName,
-        stateAcronym: editingPoint.stateAcronym
+        cityId: editingPoint.cityId
       })
-      const state = states.find(e => e.sigla === editingPoint.stateAcronym)
+      
+      const state = states.find(e => e.acronym === editingPoint.stateAcronym)
       if (state) {
         setSelectedStateId(state.id)
       }
@@ -58,7 +56,7 @@ export default function TouristPointModal({ isOpen, onClose, onSubmit, editingPo
       loadCities(selectedStateId)
     } else {
       setCities([])
-      setFormData(prev => ({ ...prev, cityName: '', ibgeCode: '' }))
+      setFormData(prev => ({ ...prev, cityId: 0 }))
     }
   }, [selectedStateId])
 
@@ -90,29 +88,12 @@ export default function TouristPointModal({ isOpen, onClose, onSubmit, editingPo
     const stateId = Number(e.target.value)
     setSelectedStateId(stateId || null)
     
-    if (stateId) {
-      const state = states.find(est => est.id === stateId)
-      if (state) {
-        setFormData(prev => ({
-          ...prev,
-          stateName: state.nome,
-          stateAcronym: state.sigla,
-          cityName: '',
-          ibgeCode: ''
-        }))
-      }
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        stateName: '',
-        stateAcronym: '',
-        cityName: '',
-        ibgeCode: ''
-      }))
+    if (!stateId) {
+      setFormData(prev => ({ ...prev, cityId: 0 }))
     }
 
-    if (errors.stateName) {
-      setErrors(prev => ({ ...prev, stateName: '' }))
+    if (errors.cityId) {
+      setErrors(prev => ({ ...prev, cityId: '' }))
     }
   }
 
@@ -124,20 +105,18 @@ export default function TouristPointModal({ isOpen, onClose, onSubmit, editingPo
       if (city) {
         setFormData(prev => ({
           ...prev,
-          cityName: city.nome,
-          ibgeCode: city.id.toString()
+          cityId: city.id
         }))
       }
     } else {
       setFormData(prev => ({
         ...prev,
-        cityName: '',
-        ibgeCode: ''
+        cityId: 0
       }))
     }
 
-    if (errors.cityName) {
-      setErrors(prev => ({ ...prev, cityName: '' }))
+    if (errors.cityId) {
+      setErrors(prev => ({ ...prev, cityId: '' }))
     }
   }
 
@@ -171,16 +150,8 @@ export default function TouristPointModal({ isOpen, onClose, onSubmit, editingPo
       newErrors.location = 'A localização é obrigatória'
     }
 
-    if (!formData.ibgeCode.trim()) {
-      newErrors.ibgeCode = 'O código IBGE é obrigatório'
-    }
-
-    if (!formData.cityName.trim()) {
-      newErrors.cityName = 'O nome da cidade é obrigatório'
-    }
-
-    if (!formData.stateName.trim()) {
-      newErrors.stateName = 'O nome do estado é obrigatório'
+    if (!formData.cityId || formData.cityId === 0) {
+      newErrors.cityId = 'A cidade é obrigatória'
     }
 
     setErrors(newErrors)
@@ -201,10 +172,7 @@ export default function TouristPointModal({ isOpen, onClose, onSubmit, editingPo
         name: '',
         description: '',
         location: '',
-        ibgeCode: '',
-        cityName: '',
-        stateName: '',
-        stateAcronym: ''
+        cityId: 0
       })
       setErrors({})
       setSelectedStateId(null)
@@ -235,10 +203,7 @@ export default function TouristPointModal({ isOpen, onClose, onSubmit, editingPo
       name: '',
       description: '',
       location: '',
-      ibgeCode: '',
-      cityName: '',
-      stateName: '',
-      stateAcronym: ''
+      cityId: 0
     })
     setErrors({})
     setSelectedStateId(null)
@@ -332,7 +297,7 @@ export default function TouristPointModal({ isOpen, onClose, onSubmit, editingPo
                         </option>
                         {states.map(state => (
                             <option key={state.id} value={state.id}>
-                                {state.nome} - {state.sigla}
+                                {state.name} - {state.acronym}
                             </option>
                         ))}
                     </select>
@@ -346,10 +311,10 @@ export default function TouristPointModal({ isOpen, onClose, onSubmit, editingPo
                     <select
                         id="cidade"
                         name="city"
-                        value={formData.ibgeCode}
+                        value={formData.cityId || ''}
                         onChange={handleCityChange}
                         disabled={!selectedStateId || isLoadingCities}
-                        className={`w-full px-4 py-2 bg-gray-700 border ${errors.cityName ? 'border-red-500' : 'border-gray-600'} rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed`}
+                        className={`w-full px-4 py-2 bg-gray-700 border ${errors.cityId ? 'border-red-500' : 'border-gray-600'} rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed`}
                     >
                         <option value="">
                             {!selectedStateId 
@@ -360,11 +325,11 @@ export default function TouristPointModal({ isOpen, onClose, onSubmit, editingPo
                         </option>
                         {cities.map(city => (
                             <option key={city.id} value={city.id}>
-                                {city.nome}
+                                {city.name}
                             </option>
                         ))}
                     </select>
-                    {errors.cityName && <p className="mt-1 text-sm text-red-500">{errors.cityName}</p>}
+                    {errors.cityId && <p className="mt-1 text-sm text-red-500">{errors.cityId}</p>}
                 </div>
             </div>
 

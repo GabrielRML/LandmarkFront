@@ -3,6 +3,7 @@ export interface ITouristPoint {
   name: string
   description: string
   location: string
+  cityId: number
   ibgeCode: string
   cityName: string
   stateName: string

@@ -8,6 +8,7 @@ import TouristPointModal from './components/TouristPointModal'
 import { touristPointService } from './services/tourist-point.service'
 import type { IPagedResult } from './types/paged-result.interface'
 import type { ITouristPoint } from './types/tourist-point.interface'
+import type { ICreateTouristPointDto } from './types/tourist-point-dto.interface'
 
 function App() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -71,7 +72,7 @@ function App() {
     setEditingPoint(null)
   }
 
-  const handleSubmitTouristPoint = async (data: Omit<ITouristPoint, 'id'>, id?: string) => {
+  const handleSubmitTouristPoint = async (data: ICreateTouristPointDto, id?: string) => {
     try {
       if (id) {
         await touristPointService.updateTouristPoint(id, data)
