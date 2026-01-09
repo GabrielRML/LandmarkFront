@@ -7,4 +7,5 @@ export interface ITouristPoint {
   cityName: string
   stateName: string
   stateAcronym: string
+  createdAt?: string
 }

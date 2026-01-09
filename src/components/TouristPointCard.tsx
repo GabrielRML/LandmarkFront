@@ -1,6 +1,6 @@
 import type { ITouristPoint } from "../types/tourist-point.interface"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPencil, faTrash, faLocationDot } from '@fortawesome/free-solid-svg-icons'
+import { faPencil, faTrash, faLocationDot, faCalendar } from '@fortawesome/free-solid-svg-icons'
 
 interface TouristPointCardProps {
   point: ITouristPoint
@@ -33,9 +33,17 @@ export default function TouristPointCard({ point, onEdit, onDelete }: TouristPoi
       </div>
       <h3 className="text-xl font-bold text-white mb-2 pr-8">{point.name}</h3>
       <p className="text-gray-300 mb-4 line-clamp-3">{point.description}</p>
-      <div className="flex items-center text-sm text-gray-400">
-        <FontAwesomeIcon icon={faLocationDot} className="h-4 w-4 mr-1" />
-        <span>{point.cityName}, {point.stateAcronym}</span>
+      <div className="flex items-center gap-4 flex-wrap text-sm text-gray-400">
+        <div className="flex items-center">
+          <FontAwesomeIcon icon={faLocationDot} className="h-4 w-4 mr-2" />
+          <span>{point.cityName}, {point.stateAcronym}</span>
+        </div>
+        {point.createdAt && (
+          <div className="flex items-center">
+            <FontAwesomeIcon icon={faCalendar} className="h-4 w-4 mr-2" />
+            <span>{new Date(point.createdAt).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+          </div>
+        )}
       </div>
     </div>
   )
