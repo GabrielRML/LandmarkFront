@@ -9,6 +9,18 @@ interface TouristPointCardProps {
 }
 
 export default function TouristPointCard({ point, onEdit, onDelete }: TouristPointCardProps) {
+  const formatDate = (dateString: string) => {
+    const isoString = dateString.endsWith('Z') ? dateString : dateString + 'Z'
+    const date = new Date(isoString)
+    return date.toLocaleString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  }
+
   return (
     <div className="bg-gray-800 border border-gray-700 rounded-lg p-6 hover:border-gray-600 transition-all hover:shadow-xl relative">
       <div className="absolute top-4 right-4 flex gap-2">
@@ -41,7 +53,7 @@ export default function TouristPointCard({ point, onEdit, onDelete }: TouristPoi
         {point.createdAt && (
           <div className="flex items-center">
             <FontAwesomeIcon icon={faCalendar} className="h-4 w-4 mr-2" />
-            <span>{new Date(point.createdAt).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+            <span>{formatDate(point.createdAt)}</span>
           </div>
         )}
       </div>
