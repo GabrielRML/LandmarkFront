@@ -1,73 +1,84 @@
-# React + TypeScript + Vite
+# LandmarkFront 🗺️
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Sistema de gerenciamento de pontos turísticos com integração ao IBGE para busca de municípios brasileiros. Aplicação web desenvolvida com React, TypeScript e Vite.
 
-Currently, two official plugins are available:
+## 📋 Sobre o Projeto
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+O LandmarkFront é uma aplicação frontend para cadastro e gerenciamento de pontos turísticos. O sistema permite:
 
-## React Compiler
+- Cadastro de pontos turísticos com nome, descrição e localização
+- Busca e filtragem de pontos turísticos
+- Integração com API do IBGE para seleção de municípios
+- Edição e exclusão de pontos turísticos
+- Paginação de resultados
+- Interface moderna e responsiva com TailwindCSS
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Como Rodar o Projeto
 
-## Expanding the ESLint configuration
+### Pré-requisitos
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Antes de começar, você precisa ter instalado em sua máquina:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- [Node.js](https://nodejs.org/) (versão 16 ou superior)
+- [npm](https://www.npmjs.com/) ou [yarn](https://yarnpkg.com/)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Instalação
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Clone o repositório ou navegue até a pasta do projeto:
+```bash
+cd G:\LandmarkFront
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+2. Instale as dependências do projeto:
+```bash
+npm install
 ```
+
+### Configuração da API
+
+O projeto espera que a API backend esteja rodando. Por padrão, a aplicação se conecta a:
+
+```
+http://localhost:5131/api
+```
+
+Se sua API estiver rodando em outro endereço, crie um arquivo `.env` na raiz do projeto:
+
+```bash
+VITE_API_BASE_URL=http://localhost:5131/api
+```
+
+### Executando o Projeto
+
+Para rodar o projeto em modo de desenvolvimento:
+
+```bash
+npm run dev
+```
+
+A aplicação estará disponível em: **http://localhost:5173**
+
+## Tecnologias Utilizadas
+
+- **React 19** - Biblioteca para construção de interfaces
+- **TypeScript** - Superset JavaScript com tipagem estática
+- **Vite** - Build tool e dev server
+- **TailwindCSS 4** - Framework CSS utility-first
+- **Axios** - Cliente HTTP para requisições
+- **SweetAlert2** - Alertas e modais elegantes
+- **FontAwesome** - Biblioteca de ícones
+- **API IBGE** - Integração para dados de municípios
+
+## Funcionalidades
+
+### Busca de Pontos Turísticos
+Sistema de busca com debounce para filtrar pontos turísticos por nome em tempo real.
+
+### Modal de Cadastro/Edição
+Interface intuitiva para criar e editar pontos turísticos com:
+- Validação de campos
+- Integração com API do IBGE para seleção de município
+- Seleção de estado e município com dropdowns cascata
+
+### Paginação
+Sistema de paginação completo para navegar pelos resultados.
