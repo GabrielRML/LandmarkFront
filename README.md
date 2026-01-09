@@ -1,6 +1,6 @@
 # LandmarkFront 🗺️
 
-Sistema de gerenciamento de pontos turísticos com integração ao IBGE para busca de municípios brasileiros. Aplicação web desenvolvida com React, TypeScript e Vite.
+Sistema de gerenciamento de pontos turísticos. Aplicação web desenvolvida com React, TypeScript e Vite.
 
 ## 📋 Sobre o Projeto
 
@@ -8,7 +8,7 @@ O LandmarkFront é uma aplicação frontend para cadastro e gerenciamento de pon
 
 - Cadastro de pontos turísticos com nome, descrição e localização
 - Busca e filtragem de pontos turísticos
-- Integração com API do IBGE para seleção de municípios
+- Seleção de estados e cidades através da API backend
 - Edição e exclusão de pontos turísticos
 - Paginação de resultados
 - Interface moderna e responsiva com TailwindCSS
@@ -67,7 +67,6 @@ A aplicação estará disponível em: **http://localhost:5173**
 - **Axios** - Cliente HTTP para requisições
 - **SweetAlert2** - Alertas e modais elegantes
 - **FontAwesome** - Biblioteca de ícones
-- **API IBGE** - Integração para dados de municípios
 
 ## Funcionalidades
 
@@ -77,7 +76,7 @@ Sistema de busca com debounce para filtrar pontos turísticos por nome em tempo 
 ### Modal de Cadastro/Edição
 Interface intuitiva para criar e editar pontos turísticos com:
 - Validação de campos
-- Integração com API do IBGE para seleção de município
+- Seleção de estado e cidade através da API backend
 - Seleção de estado e município com dropdowns cascata
 
 ### Paginação
