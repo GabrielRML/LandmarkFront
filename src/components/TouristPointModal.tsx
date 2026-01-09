@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import Swal from 'sweetalert2'
 import { getStates, getCities } from '../services/ibge.service'
 import type { ITouristPoint } from '../types/tourist-point.interface'
 import type { IEstado, IMunicipio } from '../types/IBGE.interface'
@@ -203,9 +204,24 @@ export default function TouristPointModal({ isOpen, onClose, onSubmit, editingPo
         stateAcronym: ''
       })
       setErrors({})
+      setSelectedStateId(null)
+      setCities([])
       onClose()
+      
+      Swal.fire({
+        title: editingPoint ? 'Atualizado!' : 'Cadastrado!',
+        text: editingPoint ? 'Ponto turístico atualizado com sucesso.' : 'Ponto turístico cadastrado com sucesso.',
+        timer: 2000,
+        showConfirmButton: false
+      })
     } catch (error) {
       console.error('Erro ao salvar:', error)
+      Swal.fire({
+        title: 'Erro!',
+        text: 'Erro ao salvar ponto turístico.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      })
     } finally {
       setIsSubmitting(false)
     }
