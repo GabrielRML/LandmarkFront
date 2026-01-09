@@ -80,4 +80,4 @@ Interface intuitiva para criar e editar pontos turísticos com:
 - Seleção de estado e município com dropdowns cascata
 
 ### Paginação
-Sistema de paginação completo para navegar pelos resultados.
+Sistema de paginação completo para navegar pelos resultados. A paginação só é exibida quando há mais de 10 itens cadastrados.
