@@ -45,17 +45,23 @@ export default function TouristPointCard({ point, onEdit, onDelete }: TouristPoi
       </div>
       <h3 className="text-xl font-bold text-white mb-2 pr-8">{point.name}</h3>
       <p className="text-gray-300 mb-4 line-clamp-3">{point.description}</p>
-      <div className="flex items-center gap-4 flex-wrap text-sm text-gray-400">
+      <div className="flex flex-col gap-2 text-sm text-gray-400">
         <div className="flex items-center">
           <FontAwesomeIcon icon={faLocationDot} className="h-4 w-4 mr-2" />
-          <span>{point.cityName}, {point.stateAcronym}</span>
+          <span>{point.location}</span>
         </div>
-        {point.createdAt && (
+        <div className="flex items-center gap-4 flex-wrap">
           <div className="flex items-center">
-            <FontAwesomeIcon icon={faCalendar} className="h-4 w-4 mr-2" />
-            <span>{formatDate(point.createdAt)}</span>
+            <FontAwesomeIcon icon={faLocationDot} className="h-4 w-4 mr-2" />
+            <span>{point.cityName}, {point.stateAcronym}</span>
           </div>
-        )}
+          {point.createdAt && (
+            <div className="flex items-center">
+              <FontAwesomeIcon icon={faCalendar} className="h-4 w-4 mr-2" />
+              <span>{formatDate(point.createdAt)}</span>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )
