@@ -32,23 +32,26 @@ export default function TouristPointModal({ isOpen, onClose, onSubmit, editingPo
   useEffect(() => {
     if (isOpen) {
       loadStates()
-      if (editingPoint) {
-        setFormData({
-          name: editingPoint.name,
-          description: editingPoint.description,
-          location: editingPoint.location,
-          ibgeCode: editingPoint.ibgeCode,
-          cityName: editingPoint.cityName,
-          stateName: editingPoint.stateName,
-          stateAcronym: editingPoint.stateAcronym
-        })
-        const state = states.find(e => e.sigla === editingPoint.stateAcronym)
-        if (state) {
-          setSelectedStateId(state.id)
-        }
+    }
+  }, [isOpen])
+
+  useEffect(() => {
+    if (isOpen && editingPoint && states.length > 0) {
+      setFormData({
+        name: editingPoint.name,
+        description: editingPoint.description,
+        location: editingPoint.location,
+        ibgeCode: editingPoint.ibgeCode,
+        cityName: editingPoint.cityName,
+        stateName: editingPoint.stateName,
+        stateAcronym: editingPoint.stateAcronym
+      })
+      const state = states.find(e => e.sigla === editingPoint.stateAcronym)
+      if (state) {
+        setSelectedStateId(state.id)
       }
     }
-  }, [isOpen, editingPoint])
+  }, [isOpen, editingPoint, states])
 
   useEffect(() => {
     if (selectedStateId) {
