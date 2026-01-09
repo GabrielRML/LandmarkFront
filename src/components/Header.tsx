@@ -1,3 +1,6 @@
+import { faPlus } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+
 interface HeaderProps {
   onRegisterClick: () => void
 }
@@ -15,7 +18,7 @@ export default function Header({ onRegisterClick }: HeaderProps) {
             onClick={onRegisterClick}
             className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg"
           >
-            + Cadastrar Ponto
+            <FontAwesomeIcon icon={faPlus} className="h-4 w-4 mr-2" /> Cadastrar Ponto
           </button>
         </div>
       </div>
