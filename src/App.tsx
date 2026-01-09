@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import Swal from 'sweetalert2'
 import Header from './components/Header'
 import SearchBar from './components/SearchBar'
 import TouristPointCard from './components/TouristPointCard'
@@ -96,6 +97,48 @@ function App() {
     setIsModalOpen(true)
   }
 
+  const handleDeleteClick = async (point: ITouristPoint) => {
+    const result = await Swal.fire({
+      title: 'Tem certeza?',
+      text: `Deseja deletar "${point.name}"? Esta ação não pode ser desfeita.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sim, deletar!',
+      cancelButtonText: 'Cancelar'
+    })
+
+    if (!result.isConfirmed) {
+      return
+    }
+
+    try {
+      await touristPointService.deleteTouristPoint(point.id)
+      const resultData = await touristPointService.getTouristPoints({
+        pageNumber: currentPage,
+        pageSize: 10,
+        name: debouncedSearchTerm || undefined
+      })
+      setData(resultData)
+      
+      Swal.fire({
+        title: 'Deletado!',
+        text: 'Ponto turístico deletado com sucesso.',
+        timer: 2000,
+        showConfirmButton: false
+      })
+    } catch (err) {
+      console.error('Erro ao deletar ponto turístico:', err)
+      Swal.fire({
+        title: 'Erro!',
+        text: 'Erro ao deletar ponto turístico.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      })
+    }
+  }
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
   }
@@ -122,7 +165,12 @@ function App() {
             <div className="flex flex-col gap-4 mb-8">
               {data.items.length > 0 ? (
                 data.items.map((point) => (
-                  <TouristPointCard key={point.id} point={point} onEdit={handleEditClick} />
+                  <TouristPointCard 
+                    key={point.id} 
+                    point={point} 
+                    onEdit={handleEditClick}
+                    onDelete={handleDeleteClick}
+                  />
                 ))
               ) : (
                 <div className="text-center py-12">
